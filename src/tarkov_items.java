@@ -1,30 +1,23 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import javax.imageio.ImageIO;
-import javax.json.JsonReader;
 import javax.swing.*;
 
-import org.apache.commons.io.FileUtils;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 public class tarkov_items {
 
@@ -55,7 +48,25 @@ public class tarkov_items {
 		frame.add(scroll, BorderLayout.CENTER);
 		frame.setSize(1000, 600);
 		
+
 		
+		///
+		//load hashmap
+		
+		String map_file = "./tarkov_items_data.txt";
+				
+		Map<String, String> ldapContent = new HashMap<String, String>();
+		Properties properties = new Properties();
+		properties.load(new FileInputStream(map_file));
+
+		for (String key : properties.stringPropertyNames()) {
+		   ldapContent.put(key, properties.get(key).toString());
+		}
+		///
+		
+		
+        System.out.println(ldapContent);
+
 		String file = "images/data.json";
 
 		InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(file);
@@ -84,6 +95,8 @@ public class tarkov_items {
 	        Iterator<Map.Entry> itr1 = items.entrySet().iterator();
 	        while (itr1.hasNext()) {
 	            Map.Entry pair = itr1.next();
+
+	            
 	            //System.out.println(pair.getKey() + " : " + pair.getValue());	            
 	            JSONObject itemInfo = (JSONObject) pair.getValue();
 	            
@@ -95,6 +108,10 @@ public class tarkov_items {
 	            //String item_status = (String) itemInfo.get("status"); //quizas para guardar data. me parece que no.
 	            String item_image_name= (String) itemInfo.get("image");
 	            //
+	            
+	  			String card_name = trader+"///"+item_name;
+
+	  			
 	        	// Buttons
 	            JButton btnNotFound = new JButton("Not Found");
 	            JButton btnInStash = new JButton("In Stash");
@@ -104,9 +121,24 @@ public class tarkov_items {
 	  			btnNotFound.setBounds(5, 5, 100, 30);
 	  			btnNotFound.addActionListener(new ActionListener() { 
 		  			public void actionPerformed(ActionEvent e) { 
-		  				SetItemStatus(btnNotFound); }
-		  			public void SetItemStatus(Container container) {
+		  				try {
+							SetItemStatus(btnNotFound);
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} }
+		  			public void SetItemStatus(Container container) throws FileNotFoundException, IOException {
 	  		    		container.getParent().setBackground(notFoundColor);
+	  		    		
+		  		  		ldapContent.put(card_name, "0");
+		  		  		properties.putAll(ldapContent);
+	
+		  		  		properties.store(new FileOutputStream(map_file), null);
+	  			        //System.out.println(card_name);
+
 		  				return;
 		  			}
 	  			} );
@@ -116,9 +148,24 @@ public class tarkov_items {
 	  			btnInStash.setBounds(5, 35, 100, 30);
 	  			btnInStash.addActionListener(new ActionListener() { 
 		  			public void actionPerformed(ActionEvent e) { 
-	  					SetItemStatus(btnInStash); }
-		  			public void SetItemStatus(Container container) {
+	  					try {
+							SetItemStatus(btnInStash);
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} }
+		  			public void SetItemStatus(Container container) throws FileNotFoundException, IOException {
 	  		    		container.getParent().setBackground(inStashColor);
+	  		    		
+		  		  		ldapContent.put(card_name, "1");
+		  		  		properties.putAll(ldapContent);
+	
+		  		  		properties.store(new FileOutputStream(map_file), null);
+	  			        //System.out.println(card_name);
+
 		  				return;
 		  			}
 	  			} );
@@ -128,9 +175,30 @@ public class tarkov_items {
 	  			btnTurnedIn.setBounds(5, 65, 100, 30);
 	  			btnTurnedIn.addActionListener(new ActionListener() { 
 		  			public void actionPerformed(ActionEvent e) { 
-		  				SetItemStatus(btnTurnedIn); }
-		  			public void SetItemStatus(Container container) {
+		  				try {
+							SetItemStatus(btnTurnedIn);
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} }
+		  			public void SetItemStatus(Container container) throws FileNotFoundException, IOException {
 	  		    		container.getParent().setBackground(turnedInColor);
+	  		    		
+		  		  		///
+		  		  		//save hashmap
+//		  		  		Map<String, String> ldapContent = new HashMap<String, String>();
+//		  		  		Properties properties = new Properties();
+		  		  		ldapContent.put(card_name, "2");
+		  		  		properties.putAll(ldapContent);
+	
+		  		  		properties.store(new FileWriter(map_file), null);
+		  		  		///
+		  		  		
+	  			        //System.out.println(card_name);
+
 		  				return;
 		  			}
 	  			} );
@@ -140,14 +208,28 @@ public class tarkov_items {
 	  			
 	  			// item card panel
 	  			JPanel item_card = new JPanel();
-	  			item_card.setBackground(notFoundColor);
 	  			item_card.setBounds(5, item_card_start_position_y, cardWidth, item_card_size_y);
 	  			item_card.setLayout(null);
-	  			item_card.setPreferredSize(new Dimension(800, 600));
+	  			item_card.setName(card_name);;
+	  			
+  		  		String status = ldapContent.get(card_name);
+
+  		  		if(status != null && status.equals("1")) {
+  		  			item_card.setBackground(inStashColor);
+//  			        System.out.println(status);
+  		  		}
+  		  		else if(status != null && status.equals("2")) {
+  		  			item_card.setBackground(turnedInColor);
+//  			        System.out.println(status);
+  		  		}
+  		  		else {
+  		  			item_card.setBackground(notFoundColor);
+  		  		}
+	        
 	  			
 	  			Integer itemImageSize = item_card.getHeight() - 10;
 	  			String item_image = "images/"+trader+"/"+item_image_name;
-		        System.out.println(item_image);
+		        //System.out.println(card_name);
 
 	  			ImageIcon item_icon = LoadImageIcon(item_image,itemImageSize);
 	  			JLabel itemImg = new JLabel();
