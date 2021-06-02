@@ -12,5 +12,8 @@ All vendor and items images are from the EFT wiki.
 
 # TO DO
 - Run the jar on my other devices to test it properly...
+- Fix the display of the icons that indicates
+  - which items can be crafted
+  - and which items are not needed for Kappa
 - Fix how items images are display, currently non squared images have distortion
 - Attribute the 3 downloaded .jar's (commons-io-2.6.jar, json-java.jar, json-simple-1.1.jar)
