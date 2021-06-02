@@ -3,6 +3,8 @@ EFT items needed to be found in raid to hand in for quests.
 
 All vendor and items images are from the EFT wiki.
 
+![picture alt](https://github.com/onielm/tarkov_items_java/blob/main/screenshots/Screenshot1.png?raw=true "A Screenshot")
+
 # How to use
 1. Download the jar
 2. Create a text file named "tarkov_items_data.txt" in the same folder as the jar
