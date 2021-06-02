@@ -14,6 +14,8 @@ All vendor and items images are from the EFT wiki.
 
 # TO DO
 - Run the jar on my other devices to test it properly...
+- Fix the amount of items needed
+- Change the name displayed of the items
 - Fix the display of the icons that indicates
   - which items can be crafted
   - and which items are not needed for Kappa
