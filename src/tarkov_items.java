@@ -47,8 +47,10 @@ public class tarkov_items {
 		frame.setLayout(null);
 		frame.setLayout(new BorderLayout());
 		frame.add(scroll, BorderLayout.CENTER);
-		frame.setSize(1000, 600);
+		frame.setSize(1280, 720);
 		
+		scroll.getVerticalScrollBar().setUnitIncrement(16);
+		scroll.getHorizontalScrollBar().setUnitIncrement(16);
 
 		
 		///
