@@ -27,3 +27,5 @@ The .exe was created by exporting the Eclipse project as an executable .jar, and
 - Run the jar on my other devices to test it properly...
 - Check again the items needed by vendors
 - Attribute the 3 downloaded .jar's (commons-io-2.6.jar, json-java.jar, json-simple-1.1.jar)
+
+Special thanks to u/ImGoingSpace for compiling this image, which heavily inspired my work ![picture alt](https://github.com/onielm/tarkov_items_java/blob/main/screenshots/inspiration.png?raw=true "A Quest Items Guide")
