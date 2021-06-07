@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -53,8 +54,11 @@ public class tarkov_items {
 		///
 		//load hashmap
 		
+//		String map_file = "test.txt";
 		String map_file = "./tarkov_items_data.txt";
-				
+		File data_file = new File(map_file);
+		data_file.createNewFile(); // if file already exists will do nothing 
+		
 		Map<String, String> ldapContent = new HashMap<String, String>();
 		Properties properties = new Properties();
 		properties.load(new FileInputStream(map_file));
@@ -63,9 +67,6 @@ public class tarkov_items {
 		   ldapContent.put(key, properties.get(key).toString());
 		}
 		///
-		
-		
-        System.out.println(ldapContent);
 
 		String file = "images/data.json";
 
@@ -90,26 +91,22 @@ public class tarkov_items {
   			// while loop to create each item card for curent vendor panel
 	        Map items = ((Map)jo.get(trader));
 
-	        //System.out.println(items);
-	        //System.out.println(items.size());
 	        Iterator<Map.Entry> itr1 = items.entrySet().iterator();
 	        while (itr1.hasNext()) {
 	            Map.Entry pair = itr1.next();
 
 	            
-	            //System.out.println(pair.getKey() + " : " + pair.getValue());	            
 	            JSONObject itemInfo = (JSONObject) pair.getValue();
-	            
+	  			String item_number = (String) pair.getKey();
 	            String item_name = (String) itemInfo.get("name");
+	            String item_name2 = (String) itemInfo.get("name");
 	            String item_quantity = (String) itemInfo.get("quantity");
 	            String item_kappa = (String) itemInfo.get("kappa");
 	            String item_level = (String) itemInfo.get("level");
 	            String item_crafting = (String) itemInfo.get("crafting");
-	            //String item_status = (String) itemInfo.get("status"); //quizas para guardar data. me parece que no.
 	            String item_image_name= (String) itemInfo.get("image");
-	            //
 	            
-	  			String card_name = trader+"///"+item_name;
+	  			String card_name = trader+"///"+item_name2;
 
 	  			
 	        	// Buttons
@@ -253,29 +250,39 @@ public class tarkov_items {
 	  			//craft label
 	  			Integer craftIconSize = item_card.getHeight()/3-9;
 	  			JLabel craftImg = new JLabel();
-//	  			String craft_image = "/tools.png";
-//	  			ImageIcon craft_icon = LoadImageIcon(craft_image,craftIconSize);
-//	  			craftImg.setIcon(craft_icon);
-//	  			craftImg.setBounds(15+btnTurnedIn.getWidth()+itemImg.getWidth(),
-//	  							11 + itemImg.getWidth()/3*2, 
-//	  								craftIconSize, 
-//	  								craftIconSize);
-//	  			craftImg.setLayout(null);
-//	  			craftImg.setBackground(new Color(81,81,81,155));
-//	  			craftImg.setVisible(true);
+	  			String craft_image = "images/tools.png";
+	  			ImageIcon craft_icon = LoadImageIcon(craft_image,craftIconSize);
+	  			craftImg.setIcon(craft_icon);
+	  			if (item_crafting.equals("1")) {
+		  			craftImg.setBounds(15+btnTurnedIn.getWidth()+itemImg.getWidth(),
+  							11 + itemImg.getWidth()/3*2, 
+  								craftIconSize, 
+  								craftIconSize);
+	  			}
+	  			craftImg.setLayout(null);
+	  			craftImg.setBackground(new Color(81,81,81,155));
+	  			craftImg.setVisible(true);
 	  			
 	  		
 	  			Integer kappaIconSize = item_card.getHeight()/3-9;
 	  			JLabel kappaImg = new JLabel();
-//	  			String kappa_image = "/not_kappa.png";
-//	  			ImageIcon kappa_icon = LoadImageIcon(kappa_image,kappaIconSize);
-//	  			kappaImg.setIcon(kappa_icon);
-//	  			kappaImg.setBounds(cardWidth-5 - kappaIconSize,
-//							11 + itemImg.getWidth()/3*2, 
-//								kappaIconSize, 
-//								kappaIconSize);
-//	  			kappaImg.setLayout(null);
-//	  			kappaImg.setVisible(true);
+//	  			kappaImg.setBackground(notFoundColor);
+//	  			kappaImg.setBounds(5, 5, 100, 30);
+//  				kappaImg.setLayout(null);
+
+	  			String kappa_image = "images/not_kappa.png";
+	  			ImageIcon kappa_icon = LoadImageIcon(kappa_image,kappaIconSize);
+	  			kappaImg.setIcon(kappa_icon);
+	  			
+	  			if (item_kappa.equals("0")) {
+		  			kappaImg.setBounds(cardWidth-5 - kappaIconSize,
+					11 + itemImg.getWidth()/3*2, 
+						kappaIconSize, 
+						kappaIconSize);
+	  			}
+
+	  			kappaImg.setLayout(null);
+	  			kappaImg.setVisible(true);
 	            
 	            //
 	      		item_card.add(btnNotFound);
@@ -340,7 +347,24 @@ public class tarkov_items {
 	protected ImageIcon LoadImageIcon(String path, Integer newSquareSize) {
         ImageIcon icon = new ImageIcon(this.getClass().getResource(path));
         Image image = icon.getImage(); // transform it 
-        Image newimg = image.getScaledInstance(newSquareSize, newSquareSize,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+        
+        double  width          = image.getWidth(back_panel);
+        double  height         = image.getHeight(back_panel);
+        int new_width;
+        int new_height;
+        
+        if (width == height) {
+        	new_width = newSquareSize;
+			new_height = newSquareSize;
+
+        } else if (width < height) {
+        	new_width = (int) (newSquareSize*(width/height));
+			new_height = (int) (newSquareSize*(1));
+        } else { //if (width > height) {
+        	new_width = newSquareSize;
+			new_height = (int) (newSquareSize*(height/width));
+        }
+        Image newimg = image.getScaledInstance(new_width, new_height,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
         return new ImageIcon(newimg);  // transform it back
 	}
 	
